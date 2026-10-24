@@ -1,0 +1,39 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'app.dotdeck.launcher'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'app.dotdeck.launcher'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lint { abortOnError true }
+}
+
+tasks.register('coreTest', JavaExec) {
+    dependsOn 'compileCoreTests'
+    classpath = files(layout.buildDirectory.dir('core-tests'))
+    mainClass = 'app.dotdeck.launcher.core.CoreTest'
+}
+tasks.register('compileCoreTests', JavaCompile) {
+    source = fileTree('src/main/java/app/dotdeck/launcher/core') + fileTree('src/test/java')
+    destinationDirectory = layout.buildDirectory.dir('core-tests')
+    classpath = files()
+    options.encoding = 'UTF-8'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
